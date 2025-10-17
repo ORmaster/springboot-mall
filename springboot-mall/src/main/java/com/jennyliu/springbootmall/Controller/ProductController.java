@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @RestController()
@@ -17,6 +19,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+
+
 
     @GetMapping("/Product/{product_id}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer product_id) {
@@ -60,4 +65,12 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("Products")
+    public ResponseEntity<List<Product>> getProducts(){
+        List<Product> products = productService.getProducts();
+
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+
 }

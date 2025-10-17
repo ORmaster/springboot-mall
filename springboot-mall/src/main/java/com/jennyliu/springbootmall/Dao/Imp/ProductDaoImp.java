@@ -5,6 +5,7 @@ import com.jennyliu.springbootmall.Dao.ProductRowMapper;
 import com.jennyliu.springbootmall.dto.ProductRequest;
 import com.jennyliu.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -62,6 +63,19 @@ public class ProductDaoImp implements ProductDao {
             "DELETE FROM product "+
             "WHERE 1=1 "+
             "AND  product_id = :product_id";
+
+    private final String queryProductsSQL =
+            "SELECT " +
+                    "product_id, " +
+                    "product_name, " +
+                    "category, " +
+                    "image_url, " +
+                    "price," +
+                    "stock, " +
+                    "description, " +
+                    "created_date, " +
+                    "last_modified_date " +
+                    "FROM product ";
 
 
     @Override
@@ -126,5 +140,11 @@ public class ProductDaoImp implements ProductDao {
         jdbcTemplate.update(deleteProductSQL,parameterSource);
     }
 
+    @Override
+    public List<Product> getProducts() {
 
+        List<Product> products = jdbcTemplate.query(queryProductsSQL, productRowMapper);
+
+        return products;
+    }
 }
