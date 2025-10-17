@@ -58,6 +58,12 @@ public class ProductDaoImp implements ProductDao {
             "last_modified_date=:last_modified_date" +
             " WHERE product_id = :product_id";
 
+    private final String deleteProductSQL =
+            "DELETE FROM product "+
+            "WHERE 1=1 "+
+            "AND  product_id = :product_id";
+
+
     @Override
     public Product getProductById(Integer product_id) {
 
@@ -111,6 +117,13 @@ public class ProductDaoImp implements ProductDao {
         jdbcTemplate.update(updateProductSQL,new MapSqlParameterSource(params));
 
 
+    }
+
+    public void deleteProduct(Integer product_id){
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("product_id",product_id);
+
+        jdbcTemplate.update(deleteProductSQL,parameterSource);
     }
 
 

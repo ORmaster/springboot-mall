@@ -30,4 +30,9 @@ public class ProductServiceImp implements ProductService {
 
 
     }
+
+    @Override
+    public void deleteProduct(Integer product_id) {
+        productDao.deleteProduct(product_id);
+    }
 }
