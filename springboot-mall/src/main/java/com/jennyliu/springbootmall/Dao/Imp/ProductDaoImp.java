@@ -2,12 +2,19 @@ package com.jennyliu.springbootmall.Dao.Imp;
 
 import com.jennyliu.springbootmall.Dao.ProductDao;
 import com.jennyliu.springbootmall.Dao.ProductRowMapper;
+import com.jennyliu.springbootmall.dto.ProductRequest;
 import com.jennyliu.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +41,23 @@ public class ProductDaoImp implements ProductDao {
                     "FROM product " +
                     "WHERE product_id = :product_id";
 
+    private String createProductSQL =
+            "INSERT INTO " +
+                    "product (product_name, category, image_url, price, stock, description, created_date, last_modified_date)"+
+                    "VALUES (:product_name, :category, :image_url, :price, :stock, :description, :created_date, :last_modified_date)";
+
+    private String updateProductSQL =
+            "UPDATE product " +
+            "SET " +
+            "product_name = :product_name," +
+            "category= :category," +
+            "image_url=:image_url," +
+            "price=:price," +
+            "stock=:stock," +
+            "description=:description," +
+            "last_modified_date=:last_modified_date" +
+            " WHERE product_id = :product_id";
+
     @Override
     public Product getProductById(Integer product_id) {
 
@@ -49,4 +73,45 @@ public class ProductDaoImp implements ProductDao {
         return null;
 
     }
+
+    @Override
+    public Integer createProduct(ProductRequest productRequest) {
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("product_name",productRequest.getProduct_name());
+        params.put("category",productRequest.getCategory().name());
+        params.put("image_url",productRequest.getImage_url());
+        params.put("price",productRequest.getPrice());
+        params.put("stock",productRequest.getStock());
+        params.put("description",productRequest.getDescription());
+        params.put("created_date",new Date());
+        params.put("last_modified_date",new Date());
+
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(createProductSQL,new MapSqlParameterSource(params),keyHolder);
+
+        Integer productId= keyHolder.getKey().intValue();
+
+        return productId;
+    }
+
+    @Override
+    public void updateProduct(Integer product_id, ProductRequest productRequest) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("product_name",productRequest.getProduct_name());
+        params.put("category",productRequest.getCategory().name());
+        params.put("image_url",productRequest.getImage_url());
+        params.put("price",productRequest.getPrice());
+        params.put("stock",productRequest.getStock());
+        params.put("description",productRequest.getDescription());
+        params.put("last_modified_date",new Date());
+        params.put("product_id",product_id);
+
+
+        jdbcTemplate.update(updateProductSQL,new MapSqlParameterSource(params));
+
+
+    }
+
+
 }
