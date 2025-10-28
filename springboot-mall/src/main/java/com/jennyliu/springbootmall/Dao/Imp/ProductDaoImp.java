@@ -133,7 +133,7 @@ public class ProductDaoImp implements ProductDao {
     @Override
     public List<Product> getProducts(QueryRequest queryRequest) {
 
-        String queryProductsSQL = "SELECT " +
+        String querySQL = "SELECT " +
                 "product_id, " +
                 "product_name, " +
                 "category, " +
@@ -148,25 +148,27 @@ public class ProductDaoImp implements ProductDao {
 
         Map<String, Object> paramMap = new HashMap<>();
 
-        String categorySql = "";
         if (queryRequest.getCategory() != null) {
+            String categorySql = "";
             categorySql = "AND category = " + ":category ";
             paramMap.put("category",queryRequest.getCategory().name());
 
-            queryProductsSQL = queryProductSQL + categorySql;
+            querySQL = querySQL + categorySql;
         }
 
-        String searchSql="";
         if(queryRequest.getSearch() !=null){
+            String searchSql="";
             searchSql="AND product_name LIKE " + ":search ";
             paramMap.put("search", "%" + queryRequest.getSearch() + "%");
 
-            queryProductsSQL = queryProductSQL + searchSql;
+            querySQL = querySQL + searchSql;
         }
 
+        querySQL = querySQL + " ORDER BY " + queryRequest.getOrderBy();
 
+        querySQL = querySQL + " " + queryRequest.getSort();
 
-        List<Product> products = jdbcTemplate.query(queryProductsSQL, paramMap, productRowMapper);
+        List<Product> products = jdbcTemplate.query(querySQL, paramMap, productRowMapper);
 
         return products;
     }

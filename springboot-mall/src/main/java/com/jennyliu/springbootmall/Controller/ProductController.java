@@ -24,8 +24,6 @@ public class ProductController {
     private ProductService productService;
 
 
-
-
     @GetMapping("/Product/{product_id}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer product_id) {
         Product result = productService.getProductById(product_id);
@@ -38,7 +36,7 @@ public class ProductController {
     }
 
     @PostMapping("/Product")
-    public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest){
+    public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Integer productId = productService.createProduct(productRequest);
 
         Product product = productService.getProductById(productId);
@@ -63,7 +61,7 @@ public class ProductController {
     }
 
     @DeleteMapping("Product/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId){
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -71,12 +69,18 @@ public class ProductController {
 
     @GetMapping("Products")
     public ResponseEntity<List<Product>> getProducts(
+            // 查詢功能
             @RequestParam(required = false) ProductCategory category,
-            @RequestParam(required = false) String search){
+            @RequestParam(required = false) String search,
+            // 排序功能
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "DESC") String sort) {
 
-        QueryRequest queryRequest=new QueryRequest();
+        QueryRequest queryRequest = new QueryRequest();
         queryRequest.setCategory(category);
         queryRequest.setSearch(search);
+        queryRequest.setOrderBy(orderBy);
+        queryRequest.setSort(sort);
 
         List<Product> products = productService.getProducts(queryRequest);
 
