@@ -1,8 +1,10 @@
 package com.jennyliu.springbootmall.ProductService.Imp;
 
+import com.jennyliu.springbootmall.Constant.ProductCategory;
 import com.jennyliu.springbootmall.Dao.ProductDao;
 import com.jennyliu.springbootmall.ProductService.ProductService;
 import com.jennyliu.springbootmall.dto.ProductRequest;
+import com.jennyliu.springbootmall.dto.QueryRequest;
 import com.jennyliu.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +41,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {
-        List<Product> products = productDao.getProducts();
+    public List<Product> getProducts(QueryRequest queryRequest) {
+        List<Product> products = productDao.getProducts(queryRequest);
 
         return products;
     }

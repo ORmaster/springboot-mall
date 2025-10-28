@@ -1,7 +1,9 @@
 package com.jennyliu.springbootmall.Controller;
 
+import com.jennyliu.springbootmall.Constant.ProductCategory;
 import com.jennyliu.springbootmall.ProductService.ProductService;
 import com.jennyliu.springbootmall.dto.ProductRequest;
+import com.jennyliu.springbootmall.dto.QueryRequest;
 import com.jennyliu.springbootmall.model.Product;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Query;
 import java.util.List;
 
 import static org.springframework.web.servlet.function.ServerResponse.status;
@@ -67,8 +70,15 @@ public class ProductController {
     }
 
     @GetMapping("Products")
-    public ResponseEntity<List<Product>> getProducts(){
-        List<Product> products = productService.getProducts();
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search){
+
+        QueryRequest queryRequest=new QueryRequest();
+        queryRequest.setCategory(category);
+        queryRequest.setSearch(search);
+
+        List<Product> products = productService.getProducts(queryRequest);
 
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
