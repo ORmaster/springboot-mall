@@ -149,7 +149,7 @@ public class ProductDaoImp implements ProductDao {
         Map<String, Object> paramMap = new HashMap<>();
 
         if (queryRequest.getCategory() != null) {
-            String categorySql = "";
+            String categorySql;
             categorySql = "AND category = " + ":category ";
             paramMap.put("category",queryRequest.getCategory().name());
 
@@ -157,7 +157,7 @@ public class ProductDaoImp implements ProductDao {
         }
 
         if(queryRequest.getSearch() !=null){
-            String searchSql="";
+            String searchSql;
             searchSql="AND product_name LIKE " + ":search ";
             paramMap.put("search", "%" + queryRequest.getSearch() + "%");
 
@@ -167,6 +167,11 @@ public class ProductDaoImp implements ProductDao {
         querySQL = querySQL + " ORDER BY " + queryRequest.getOrderBy();
 
         querySQL = querySQL + " " + queryRequest.getSort();
+
+        querySQL = querySQL + " LIMIT :limit OFFSET :offset ";
+
+        paramMap.put("limit",queryRequest.getLimit());
+        paramMap.put("offset",queryRequest.getOffset());
 
         List<Product> products = jdbcTemplate.query(querySQL, paramMap, productRowMapper);
 

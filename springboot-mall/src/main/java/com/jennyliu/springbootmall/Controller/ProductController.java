@@ -74,13 +74,18 @@ public class ProductController {
             @RequestParam(required = false) String search,
             // 排序功能
             @RequestParam(defaultValue = "created_date") String orderBy,
-            @RequestParam(defaultValue = "DESC") String sort) {
+            @RequestParam(defaultValue = "DESC") String sort,
+            // 分頁
+            @RequestParam(defaultValue = "5") Integer limit,
+            @RequestParam(defaultValue = "0") Integer offset) {
 
         QueryRequest queryRequest = new QueryRequest();
         queryRequest.setCategory(category);
         queryRequest.setSearch(search);
         queryRequest.setOrderBy(orderBy);
         queryRequest.setSort(sort);
+        queryRequest.setLimit(limit);
+        queryRequest.setOffset(offset);
 
         List<Product> products = productService.getProducts(queryRequest);
 
