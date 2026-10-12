@@ -151,14 +151,14 @@ public class ProductDaoImp implements ProductDao {
         if (queryRequest.getCategory() != null) {
             String categorySql;
             categorySql = "AND category = " + ":category ";
-            paramMap.put("category",queryRequest.getCategory().name());
+            paramMap.put("category", queryRequest.getCategory().name());
 
             querySQL = querySQL + categorySql;
         }
 
-        if(queryRequest.getSearch() !=null){
+        if (queryRequest.getSearch() != null) {
             String searchSql;
-            searchSql="AND product_name LIKE " + ":search ";
+            searchSql = "AND product_name LIKE " + ":search ";
             paramMap.put("search", "%" + queryRequest.getSearch() + "%");
 
             querySQL = querySQL + searchSql;
@@ -170,8 +170,8 @@ public class ProductDaoImp implements ProductDao {
 
         querySQL = querySQL + " LIMIT :limit OFFSET :offset ";
 
-        paramMap.put("limit",queryRequest.getLimit());
-        paramMap.put("offset",queryRequest.getOffset());
+        paramMap.put("limit", queryRequest.getLimit());
+        paramMap.put("offset", queryRequest.getOffset());
 
         List<Product> products = jdbcTemplate.query(querySQL, paramMap, productRowMapper);
 
